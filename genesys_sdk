@@ -1,0 +1,114 @@
+
+
+package com.genesyslab.platform.samples.com;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.TrustManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import com.genesyslab.platform.applicationblocks.com.ConfServiceFactory;
+import com.genesyslab.platform.applicationblocks.com.ConfigException;
+import com.genesyslab.platform.applicationblocks.com.IConfService;
+import com.genesyslab.platform.applicationblocks.com.WellKnownDBIDs;
+import com.genesyslab.platform.applicationblocks.com.objects.CfgPerson;
+import com.genesyslab.platform.applicationblocks.com.objects.CfgServer;
+import com.genesyslab.platform.commons.connection.tls.KeyManagerHelper;
+import com.genesyslab.platform.commons.connection.tls.SSLExtendedOptions;
+import com.genesyslab.platform.commons.connection.tls.TrustManagerHelper;
+import com.genesyslab.platform.commons.protocol.Endpoint;
+import com.genesyslab.platform.commons.protocol.ProtocolException;
+import com.genesyslab.platform.configuration.protocol.ConfServerProtocol;
+import com.genesyslab.platform.configuration.protocol.confserver.requests.objects.RequestCreateObject;
+import com.genesyslab.platform.configuration.protocol.types.CfgAppType;
+import com.genesyslab.platform.configuration.protocol.types.CfgFlag;
+import com.genesyslab.platform.configuration.protocol.types.CfgObjectType;
+import com.genesyslab.platform.reporting.protocol.statserver.AgentInfo;
+
+public class Test_Config implements TrustManager{
+private static ConfServerProtocol csp;
+
+public static void main(String[] args) throws ParserConfigurationException {
+	
+	
+	
+	try {
+	/*File fXmlFile = new File("E:/Eclispe/Xml.txt");
+	    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	    dbFactory.setNamespaceAware(true);
+	    Document doc ;
+	doc = dBuilder.parse(fXmlFile);
+	System.out.println("file is.."+doc);*/
+	/*boolean tlsEnabled=true;
+	
+	TrustManager tm=TrustManagerHelper.createTrustEveryoneTrustManager();
+	KeyManager km=KeyManagerHelper.createEmptyKeyManager();
+	SSLExtendedOptions ssle=null;*/
+	
+	Endpoint ep= new Endpoint("default","CTSC00380401401",2020);
+	csp	=new ConfServerProtocol(ep);
+	csp.setClientName("default");
+	csp.setClientApplicationType(CfgAppType.CFGSCE.asInteger());
+	
+	csp.setUserName("377003");	
+	csp.setUserPassword("377003");
+	 IConfService service = ConfServiceFactory.createConfService(csp);
+	 csp.open();
+	 
+	 CfgPerson newAgent = new CfgPerson(service);
+
+     newAgent.setUserName("377003_1");
+
+     newAgent.setFirstName("A");
+     newAgent.setLastName("T");
+     newAgent.setEmployeeID("373");
+
+     newAgent.setIsAgent(CfgFlag.CFGTrue);
+
+     newAgent.setTenantDBID(WellKnownDBIDs.EnvironmentDBID);
+     
+     newAgent.save();
+
+     
+	 /*System.out.println("connection opened--*");
+	 CfgPerson person=new CfgPerson(service);
+	 CfgObjectType objectType = CfgObjectType.CFGPerson;
+	 int intPerson = objectType.asInteger();
+	 System.out.println("file is ..."+doc);
+	 RequestCreateObject requestCreateObject =
+	 RequestCreateObject.create(CfgPerson.OBJECT_TYPE.asInteger(),  doc);
+	System.out.println("Connection Successfull");*/
+}
+	
+	catch (ProtocolException | IllegalStateException | InterruptedException | ConfigException  e) {
+	//catch (ProtocolException | IllegalStateException | InterruptedException | SAXException | IOException e) {
+	// TODO Auto-generated catch block
+	System.out.println("Connection Denied");
+	e.printStackTrace();
+}
+	finally {
+	try {
+	csp.close();
+	System.out.println("Connection Closed Succefully");
+	} catch (ProtocolException | IllegalStateException | InterruptedException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	System.out.println("Exception close is "+e);
+	}
+	}
+	
+	}
+	
+}
