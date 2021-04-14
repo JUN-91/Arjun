@@ -57,7 +57,7 @@ public static void main(String[] args) throws ParserConfigurationException {
 	KeyManager km=KeyManagerHelper.createEmptyKeyManager();
 	SSLExtendedOptions ssle=null;*/
 	
-	Endpoint ep= new Endpoint("default","CTSC00380401401",2020);
+	Endpoint ep= new Endpoint("default","<servername>",2020);
 	csp	=new ConfServerProtocol(ep);
 	csp.setClientName("default");
 	csp.setClientApplicationType(CfgAppType.CFGSCE.asInteger());
